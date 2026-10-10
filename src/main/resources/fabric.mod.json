@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "nekochunks",
+	"version": "${version}",
+	"name": "NekoChunks",
+	"description": "Làm việc load/dựng chunk mượt hơn, giảm khựng khi di chuyển nhanh. Mod cá nhân, không phát hành.",
+	"authors": [
+		"hoangphuoc201313"
+	],
+	"license": "CC0-1.0",
+	"icon": "assets/nekochunks/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.nekochunks.NekoChunks"
+		],
+		"client": [
+			"com.nekochunks.client.NekoChunksClient"
+		]
+	},
+	"mixins": [
+		"nekochunks.mixins.json",
+		{
+			"config": "nekochunks.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

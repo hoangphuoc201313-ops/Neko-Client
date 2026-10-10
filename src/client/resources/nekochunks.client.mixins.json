@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.nekochunks.client.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"NekoChunksClientMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
