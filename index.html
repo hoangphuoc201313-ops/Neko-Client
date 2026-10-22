@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WinFix AI — Local System Diagnostic Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&family=Cascadia+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <!-- Title Bar -->
+  <div class="titlebar">
+    <div class="titlebar-left">
+      <div class="app-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 5.5C3 4.672 3.672 4 4.5 4H20.5C21.328 4 22 4.672 22 5.5V13.5C22 14.328 21.328 15 20.5 15H4.5C3.672 15 3 14.328 3 13.5V5.5Z" stroke="white" stroke-width="1.5"/><path d="M7 19C7 19 9.5 17.5 12 17.5C14.5 17.5 17 19 17 19" stroke="white" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="10" r="2.5" stroke="white" stroke-width="1.5"/><path d="M8 8.5L6 7" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M16 8.5L18 7" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <span class="app-title">WinFix AI</span>
+      <span class="app-subtitle">Local Diagnostic Assistant</span>
+      <span class="titlebar-badge">DIAGNOSTIC MODE</span>
+    </div>
+    <div class="titlebar-center">
+      <div class="privilege-indicator" id="privilegeIndicator">
+        <span class="priv-dot admin"></span>
+        <span>Administrator</span>
+        <span class="priv-sep">·</span>
+        <span id="tiStatus" class="ti-off">TrustedInstaller: Not Held</span>
+      </div>
+    </div>
+    <div class="titlebar-right">
+      <span class="sys-time" id="sysTime">--:--</span>
+      <div class="win-controls">
+        <span class="wc">—</span><span class="wc">□</span><span class="wc close">×</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="nav-item active" data-view="diagnose">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/></svg>
+          <span>Diagnose</span>
+          <span class="nav-badge">●</span>
+        </div>
+        <div class="nav-item" data-view="system">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          <span>System</span>
+        </div>
+        <div class="nav-item" data-view="tools">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          <span>Repair Tools</span>
+        </div>
+        <div class="nav-item" data-view="history">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>History</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">QUICK DIAGNOSTICS</div>
+        <button class="quick-btn" data-symptom="update"><span class="qb-icon" style="background:#0078D4">↻</span> Windows Update fails</button>
+        <button class="quick-btn" data-symptom="network"><span class="qb-icon" style="background:#038387">≋</span> No internet / Wi-Fi</button>
+        <button class="quick-btn" data-symptom="audio"><span class="qb-icon" style="background:#8764B8">♫</span> No audio output</button>
+        <button class="quick-btn" data-symptom="boot"><span class="qb-icon" style="background:#C42B1C">◉</span> Slow boot / Boot error</button>
+        <button class="quick-btn" data-symptom="performance"><span class="qb-icon" style="background:#CA5010">⚡</span> System slow / High CPU</button>
+        <button class="quick-btn" data-symptom="bluescreen"><span class="qb-icon" style="background:#0067B8">▭</span> BSOD / Crash</button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">SYSTEM STATUS</div>
+        <div class="sys-card">
+          <div class="sys-row"><span>OS</span><b>Windows 11 Pro 24H2</b></div>
+          <div class="sys-row"><span>Build</span><b>26100.2605</b></div>
+          <div class="sys-row"><span>Uptime</span><b id="uptime">4d 11h 22m</b></div>
+          <div class="sys-row"><span>Protection</span><span class="status-pill ok">Defender Active</span></div>
+        </div>
+        <div class="core-principle">
+          <div class="cp-title">⛨ Core Principle</div>
+          <div class="cp-text"><b>Diagnose first.</b> Repair second. Verify third.<br>Every modification must have a specific reason.</div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="local-badge"><span class="dot"></span> Running locally · No cloud upload · Evidence-based</div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Diagnose View -->
+      <div class="view active" id="view-diagnose">
+        <div class="diagnostic-header">
+          <div class="diag-steps" id="diagSteps">
+            <div class="step active" data-step="1"><span>1</span> Diagnose</div>
+            <div class="step-line"></div>
+            <div class="step" data-step="2"><span>2</span> Plan</div>
+            <div class="step-line"></div>
+            <div class="step" data-step="3"><span>3</span> Authorize</div>
+            <div class="step-line"></div>
+            <div class="step" data-step="4"><span>4</span> Execute</div>
+            <div class="step-line"></div>
+            <div class="step" data-step="5"><span>5</span> Verify</div>
+          </div>
+          <div class="diag-actions">
+            <button class="btn ghost" id="resetBtn">Reset Session</button>
+            <button class="btn primary" id="newDiagBtn">+ New Diagnosis</button>
+          </div>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+          <!-- Welcome -->
+          <div class="msg ai">
+            <div class="msg-avatar">◈</div>
+            <div class="msg-body">
+              <div class="msg-name">WinFix AI <span class="msg-tag">Local · Administrator</span> <span class="msg-time" id="welcomeTime"></span></div>
+              <div class="msg-bubble">
+                <p><b>Ready to diagnose.</b> I'm running locally on your Windows computer with administrator privileges.</p>
+                <p>Describe your problem — for example:</p>
+                <ul>
+                  <li>"Windows Update stuck at 0% and error 0x80070002"</li>
+                  <li>"No Wi-Fi after recent update"</li>
+                  <li>"PC takes 4 minutes to boot"</li>
+                </ul>
+                <p class="hint">I will: <b>1)</b> gather evidence → <b>2)</b> identify <u>one primary root cause</u> → <b>3)</b> create a minimal repair plan → <b>4)</b> verify the result. I never modify the system without a diagnosed reason.</p>
+              </div>
+              <div class="msg-suggestions">
+                <button class="sugg" data-fill="Windows Update fails with error 0x80070002, wuauserv won't start">Windows Update 0x80070002</button>
+                <button class="sugg" data-fill="No internet — Wi-Fi shows connected but no browsing, DNS probe failed">No internet after update</button>
+                <button class="sugg" data-fill="Computer is very slow, Task Manager shows 100% disk usage, startup takes long">100% disk / slow PC</button>
+                <button class="sugg" data-fill="No sound — speaker icon has red X, audio service not running">No audio output</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="input-bar">
+          <div class="input-wrap">
+            <textarea id="userInput" placeholder="Describe the symptom… e.g., 'Windows Update cannot start, error 0x80070422'" rows="1"></textarea>
+            <button class="send-btn" id="sendBtn" title="Send (Enter)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+          <div class="input-meta">
+            <span><b>Evidence-first:</b> I prefer tool output over assumptions. Tools used deterministically.</span>
+            <span class="meta-right">↵ Enter to send · ⇧+Enter new line</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- System View -->
+      <div class="view" id="view-system">
+        <h2 class="view-title">System Overview</h2>
+        <p class="view-desc">Live snapshot from local machine — no data leaves this device.</p>
+        <div class="sys-grid">
+          <div class="sys-panel">
+            <h3>Operating System</h3>
+            <div class="kv"><span>Edition</span><b>Windows 11 Pro</b></div>
+            <div class="kv"><span>Version</span><b>24H2 (26100.2605)</b></div>
+            <div class="kv"><span>Experience</span><b>Windows Feature Experience Pack 1000.26100.36.0</b></div>
+            <div class="kv"><span>Activation</span><span class="pill ok">Activated with digital license</span></div>
+          </div>
+          <div class="sys-panel">
+            <h3>Security</h3>
+            <div class="kv"><span>Windows Defender</span><span class="pill ok">Active & up to date</span></div>
+            <div class="kv"><span>Firewall</span><span class="pill ok">On (Domain, Private, Public)</span></div>
+            <div class="kv"><span>UAC</span><span class="pill warn">Default — Prompt for consent</span></div>
+            <div class="kv"><span>Secure Boot</span><span class="pill ok">Enabled</span></div>
+          </div>
+          <div class="sys-panel">
+            <h3>Services</h3>
+            <div class="service-list" id="serviceList">
+              <!-- injected -->
+            </div>
+          </div>
+          <div class="sys-panel">
+            <h3>Storage Health</h3>
+            <div class="storage-bar"><div class="storage-fill" style="width:62%"></div></div>
+            <div class="kv"><span>C: (NVMe)</span><b>289 GB / 462 GB used</b></div>
+            <div class="kv"><span>File System</span><b>NTFS — Healthy</b></div>
+            <div class="kv"><span>TRIM</span><span class="pill ok">Enabled</span></div>
+          </div>
+        </div>
+        <div class="sys-panel wide">
+          <h3>Recent System Events (Event Viewer — System)</h3>
+          <div class="event-table" id="eventTable"></div>
+        </div>
+      </div>
+
+      <!-- Tools View -->
+      <div class="view" id="view-tools">
+        <h2 class="view-title">Repair Tools</h2>
+        <p class="view-desc">Deterministic system interfaces. Each tool is executed only when relevant to the diagnosed problem. <b>Dangerous operations</b> require explicit authorization.</p>
+        
+        <div class="tools-grid">
+          <div class="tool-card" data-tool="sfc">
+            <div class="tool-head"><span class="tool-icon">◈</span><b>sfc /scannow</b><span class="tool-priv">Admin</span></div>
+            <p>Scan and repair protected system files via Windows Resource Protection.</p>
+            <div class="tool-meta">Non-destructive · Read + repair</div>
+          </div>
+          <div class="tool-card" data-tool="dism">
+            <div class="tool-head"><span class="tool-icon">⬢</span><b>DISM /RestoreHealth</b><span class="tool-priv">Admin</span></div>
+            <p>Repair Windows component store from Windows Update or local source.</p>
+            <div class="tool-meta">Requires healthy WinSxS / network</div>
+          </div>
+          <div class="tool-card" data-tool="chkdsk">
+            <div class="tool-head"><span class="tool-icon">▭</span><b>chkdsk /scan</b><span class="tool-priv">Admin</span></div>
+            <p>Check filesystem integrity without offline reboot.</p>
+            <div class="tool-meta">Online scan · No lock</div>
+          </div>
+          <div class="tool-card dangerous" data-tool="registry">
+            <div class="tool-head"><span class="tool-icon">⚠</span><b>Registry Modification</b><span class="tool-priv danger">Auth Required</span></div>
+            <p>Modify service startup, policies, or component keys.</p>
+            <div class="tool-meta">⚠ Requires explicit repair authorization</div>
+          </div>
+          <div class="tool-card dangerous" data-tool="service">
+            <div class="tool-head"><span class="tool-icon">⚙</span><b>Service Configuration</b><span class="tool-priv danger">Auth Required</span></div>
+            <p>Change service start type, dependencies, or logon.</p>
+            <div class="tool-meta">sc config / net start · Verified after</div>
+          </div>
+          <div class="tool-card dangerous" data-tool="driver">
+            <div class="tool-head"><span class="tool-icon">⬣</span><b>Driver Install/Remove</b><span class="tool-priv danger">Auth Required</span></div>
+            <p>Dism, PnPUtil driver operations.</p>
+            <div class="tool-meta">Reboot may be required</div>
+          </div>
+          <div class="tool-card dangerous" data-tool="bcd">
+            <div class="tool-head"><span class="tool-icon">⧉</span><b>Boot Configuration (BCD)</b><span class="tool-priv ti">TrustedInstaller</span></div>
+            <p>bcdedit / rebuild BCD, fix boot manager.</p>
+            <div class="tool-meta">⚠ Boot-critical · Rollback prepared</div>
+          </div>
+          <div class="tool-card" data-tool="network">
+            <div class="tool-head"><span class="tool-icon">≋</span><b>Network Reset</b><span class="tool-priv">Admin</span></div>
+            <p>Flush DNS, reset Winsock, renew DHCP.</p>
+            <div class="tool-meta">ipconfig / netsh · Non-destructive</div>
+          </div>
+        </div>
+
+        <div class="terminal-panel">
+          <div class="term-head">
+            <span class="term-title">Windows Terminal — PowerShell (Administrator)</span>
+            <span class="term-actions">
+              <button class="btn tiny ghost" id="clearTerm">Clear</button>
+              <button class="btn tiny" id="runDemoTool">Run: Get-Service wuauserv</button>
+            </span>
+          </div>
+          <div class="terminal" id="terminal">
+            <div class="term-line"><span class="ps">PS C:\Windows\System32></span> <span class="muted">Ready. Tools execute deterministically and log evidence.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- History View -->
+      <div class="view" id="view-history">
+        <h2 class="view-title">Repair History & Verification Log</h2>
+        <p class="view-desc">Every modification is logged with expected vs actual state. "Repair verified" only when confirmed.</p>
+        <div class="history-list" id="historyList">
+          <div class="empty-history">
+            <div class="empty-icon">◷</div>
+            <p>No repairs yet in this session.</p>
+            <span>Completed repairs will appear here with verification status.</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Rail - Context -->
+    <aside class="rail">
+      <div class="rail-card">
+        <h4>Operating Mode</h4>
+        <div class="mode-pill diagnostic" id="modePill">● DIAGNOSTIC</div>
+        <p class="rail-desc">No system modification occurs without an authorized repair tool. Current phase:</p>
+        <div class="phase-list">
+          <div class="phase active">Diagnose</div>
+          <div class="phase">Plan</div>
+          <div class="phase">Authorize</div>
+          <div class="phase">Execute</div>
+          <div class="phase">Verify</div>
+        </div>
+      </div>
+
+      <div class="rail-card">
+        <h4>Evidence Collected</h4>
+        <div class="evidence-list" id="evidenceList">
+          <div class="evidence-empty">No evidence yet. Start a diagnosis to gather system data.</div>
+        </div>
+      </div>
+
+      <div class="rail-card">
+        <h4>Security Invariants</h4>
+        <ul class="invariant-list">
+          <li>✦ Never disable Defender without diagnostic reason</li>
+          <li>✦ Never disable UAC permanently</li>
+          <li>✦ Never delete System32 / WinSxS as generic fix</li>
+          <li>✦ Never hide modifications from user</li>
+          <li>✦ TrustedInstaller ops are gated & logged</li>
+        </ul>
+      </div>
+
+      <div class="rail-card trust-card">
+        <h4>Why trust this repair?</h4>
+        <p>Correct diagnosis + minimal modification + verified result. Rollback strategy included where applicable.</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Repair Plan Modal -->
+  <div class="modal-overlay" id="planModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>Structured Repair Plan</h3>
+        <button class="icon-btn" id="closeModal">×</button>
+      </div>
+      <div class="modal-body" id="planBody"></div>
+      <div class="modal-foot">
+        <button class="btn ghost" id="dismissPlan">Dismiss</button>
+        <button class="btn danger" id="denyPlan">Deny Authorization</button>
+        <button class="btn primary" id="authorizePlan">Authorize & Execute →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
